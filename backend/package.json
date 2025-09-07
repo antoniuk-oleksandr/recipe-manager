@@ -21,7 +21,8 @@
     "db:generate": "pnpm drizzle-kit generate --config=src/config/drizzle.config.ts",
     "db:migrate": "pnpm drizzle-kit migrate --config=src/config/drizzle.config.ts",
     "compose-down": "docker-compose -f ../infra/dev/docker-compose.yaml down",
-    "compose-up": "docker-compose -f ../infra/dev/docker-compose.yaml up -d"
+    "compose-up": "docker-compose -f ../infra/dev/docker-compose.yaml up -d",
+    "docker-build": "docker buildx build -t kawaiinex/recipe-manager-backend ."
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
