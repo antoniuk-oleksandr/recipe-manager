@@ -13,6 +13,30 @@ services:
       - ./volumes/recipes-manager-psql-db:/var/lib/postgresql/data
     networks:
       - recipes-manager-network
+      
+  recipe-mananger-psql-test-db:
+    image: postgres:17
+    container_name: recipe-mananger-psql-test-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_TEST_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
+    ports:
+      - "${POSTGRES_TEST_PORT}:5432"
+
+  # recipe-manager-backend:
+  #   container_name: recipe-manager-backend
+  #   build:
+  #     context: ../../backend
+  #   restart: unless-stopped
+  #   environment:
+  #     DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+  #     PORT: 8080
+  #   networks:
+  #     - recipes-manager-network
+  #   ports:
+  #     - "8080:8080"
 
 networks:
   recipes-manager-network:
