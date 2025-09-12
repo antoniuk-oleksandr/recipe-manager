@@ -6,6 +6,8 @@
 
 </div>
 
+🔗 Live Staging: [https://recipe-manager-backend-etny.onrender.com](https://recipe-manager-backend-etny.onrender.com)
+
 Recipe Manager aims to be a full-stack web application for creating, browsing, and managing recipes. Users can sign up, create profiles, add recipes, mark favorites, and search through a collection of recipes.
 
 > **Note:** Recipe Manager is currently under active development. Many features are planned and in progress.
@@ -135,16 +137,39 @@ POSTGRES_TEST_PORT=your_postgres_test_db_port
 Coming soon
 ```
 
-## Roadmap
+## Backend Roadmap
 
+- [x] Dockerfile setup
+- [x] Docker Compose setup
+- [x] CI/CD pipeline with GitHub Actions
+- [x] Test coverage reporting with CodeCov
+- [x] Database migrations / Drizzle setup
+- [x] Health & system checks
+- [x] Render deployment for staging
 - [ ] Email/password authentication (JWT) **25% done**
-- [ ] CI/CD for backend and frontend
-- [ ] Profile pages
-- [ ] Recipe creation, editing, and deletion
-- [ ] Public and private recipes
+- [ ] Logging
+- [ ] Metrics
+- [ ] Swagger documentation
+- [ ] Users management
+- [ ] Recipes management
 - [ ] Favorites system
 - [ ] Search & filters
-- [ ] Responsive frontend
+- [ ] Redis caching
+- [ ] AWS deployment for production
+
+## Frontend Roadmap
+
+- [ ] CI/CD
+- [ ] Test coverage reporting with CodeCov
+- [ ] Render deployment for staging
+- [ ] Sign-in / Sign-up pages
+- [ ] Recipe pages (view, create, edit, delete)
+- [ ] My Recipes page
+- [ ] Favorites page
+- [ ] Search & filters
+- [ ] Layout & navigation (responsive)
+- [ ] Recipe detail page
+- [ ] Settings / profile page
 - [ ] AWS deployment for production
 
 ## Contributing
