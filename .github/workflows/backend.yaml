@@ -69,7 +69,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: antoniuk-oleksandr/ci-test
+          slug: antoniuk-oleksandr/recipe-manager
           flags: backend
 
       - name: Deploy to Render
