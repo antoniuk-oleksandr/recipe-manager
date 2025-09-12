@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { HealthController } from '../controller/health.controller';
-import { DbService } from 'src/db/service/db.service';
 import { HEALTH_SERVICE } from '../constants/health.constants';
 import { HealthServiceImpl } from '../service/health.service';
+import { DbModule } from 'src/db/module/db.module';
 
 @Module({
+  imports: [DbModule],
   controllers: [HealthController],
   providers: [
-    DbService,
     {
       provide: HEALTH_SERVICE,
       useClass: HealthServiceImpl,

@@ -1,1 +1,1 @@
-export const HEALTH_SERVICE = 'HEALTH_SERVICE';
+export const HEALTH_SERVICE = Symbol('HEALTH_SERVICE');
