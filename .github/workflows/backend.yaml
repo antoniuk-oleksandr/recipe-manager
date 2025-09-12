@@ -1,0 +1,78 @@
+name: Backend CI/CD
+
+on:
+  pull_request:
+    branches:
+      - "dev"
+
+jobs:
+  backend:
+    if: startsWith(github.head_ref, 'backend/') ||
+      startsWith(github.head_ref, 'feat/backend/') ||
+      startsWith(github.head_ref, 'fix/backend/') ||
+      startsWith(github.head_ref, 'chore/backend/') ||
+      startsWith(github.head_ref, 'refactor/backend/')
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - 5433:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+        working-directory: backend
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: backend
+
+      - name: Generate Drizzle db client
+        run: pnpm run db:generate
+        working-directory: backend
+
+      - name: Run DB migrations
+        run: pnpm run db:test:migrate
+        working-directory: backend
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5433/test_db
+
+      - name: Run tests
+        run: pnpm run test
+        working-directory: backend
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5433/test_db
+          JWT_SECRET: secretKey
+          JWT_ACCESS_EXPIRES_IN: 900
+          JWT_REFRESH_EXPIRES_IN: 43200
+          PASSWORD_SALT_ROUNDS: 10
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: antoniuk-oleksandr/ci-test
+          flags: backend
+
+      - name: Deploy to Render
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.RENDER_HOOK }}"
