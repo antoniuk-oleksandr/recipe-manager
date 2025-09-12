@@ -6,12 +6,13 @@
 
 </div>
 
-🔗 Live Staging: [https://recipe-manager-backend-etny.onrender.com](https://recipe-manager-backend-etny.onrender.com)
 
 Recipe Manager aims to be a full-stack web application for creating, browsing, and managing recipes. Users can sign up, create profiles, add recipes, mark favorites, and search through a collection of recipes.
 
 > **Note:** Recipe Manager is currently under active development. Many features are planned and in progress.
 > The app is not yet production-ready—follow along or contribute as features are built!
+
+🔗 Live Staging: [https://recipe-manager-backend-etny.onrender.com](https://recipe-manager-backend-etny.onrender.com)
 
 ## Current Status
 
