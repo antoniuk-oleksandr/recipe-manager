@@ -1,12 +1,8 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Res } from '@nestjs/common';
 import type { HealthService } from '../interface/health.service.interface';
 import { HEALTH_SERVICE } from '../constants/health.constants';
 import { HealthDto } from '../domain/dto/health.dto';
+import type { FastifyReply } from 'fastify';
 
 @Controller('health')
 export class HealthController {
@@ -16,10 +12,13 @@ export class HealthController {
   ) {}
 
   @Get()
-  async healthCheck(): Promise<HealthDto> {
+  async healthCheck(
+    @Res({ passthrough: true }) res: FastifyReply,
+  ): Promise<HealthDto> {
     const health = await this.healthService.checkAllServices();
+
     if (health.status === 'error') {
-      throw new ServiceUnavailableException(health);
+      res.status(HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     return health;

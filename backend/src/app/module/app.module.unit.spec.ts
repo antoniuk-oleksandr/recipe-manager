@@ -1,13 +1,13 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthModule } from 'src/api/auth/module/auth.module';
+import { AppModule } from './app.module';
 
 describe('AppModule', () => {
   let module: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [AuthModule],
+      imports: [AppModule],
     })
       .overrideProvider(ConfigService)
       .useValue({ getOrThrow: jest.fn() })
