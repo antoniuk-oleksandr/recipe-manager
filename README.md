@@ -2,11 +2,12 @@
 
 <div align="center">
 
-[![Backend CI/CD](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml/badge.svg)](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml)
+[![Backend CI/CD](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml/badge.svg)](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml) 
 [![codecov](https://codecov.io/gh/antoniuk-oleksandr/recipe-manager/graph/badge.svg?token=RARSAUWQPE)](https://codecov.io/gh/antoniuk-oleksandr/recipe-manager)
 [![API Docs](https://img.shields.io/badge/docs-Swagger-blue)](https://antoniuk-oleksandr.github.io/recipe-manager/)
 
 </div>
+
 
 Recipe Manager aims to be a full-stack web application for creating, browsing, and managing recipes. Users can sign up, create profiles, add recipes, mark favorites, and search through a collection of recipes.
 
@@ -70,7 +71,7 @@ recipe-manager/
 
 ## API Documentation
 
-Interactive API docs are available here:
+Interactive API docs are available here:  
 🌐 [Recipe Manager API Docs](https://antoniuk-oleksandr.github.io/recipe-manager/)
 
 ## Getting Started
