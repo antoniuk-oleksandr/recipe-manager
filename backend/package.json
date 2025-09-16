@@ -19,9 +19,11 @@
     "docker-build": "docker buildx build -t kawaiinex/recipe-manager-backend .",
     "test": "dotenv -e .env.test -- npx jest --config src/config/jest/jest.config.ts --coverage",
     "test:int": "dotenv -e .env.test -- npx jest --config src/config/jest/jest.int.config.ts --coverage",
-    "cov:html": "firefox ./coverage/lcov-report/index.html"
+    "cov:html": "firefox ./coverage/lcov-report/index.html",
+    "gen:swagger": "npx ts-node -r tsconfig-paths/register ./scripts/swagger.ts"
   },
   "dependencies": {
+    "@fastify/static": "^8.2.0",
     "@jest/transform": "^30.1.2",
     "@nestjs/class-validator": "^0.13.4",
     "@nestjs/common": "^11.0.1",
@@ -30,6 +32,7 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-fastify": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "class-transformer": "^0.5.1",
