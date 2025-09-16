@@ -9,6 +9,7 @@ import { AppConfigurator } from './config/app/app-configurator';
 import { GlobalPrefixConfig } from './config/app/global-prefox.config';
 import { ValidationPipeConfig } from './config/app/validation-pipe.config';
 import { ExceptionFilterConfig } from './config/app/exception-filter.config';
+import { SwaggerConfig } from './config/app/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,6 +21,7 @@ async function bootstrap() {
     new GlobalPrefixConfig('api/v1'),
     new ValidationPipeConfig(),
     new ExceptionFilterConfig(),
+    new SwaggerConfig(),
   ]);
 
   appConfigurator.configure(app);

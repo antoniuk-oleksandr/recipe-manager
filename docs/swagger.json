@@ -1,0 +1,252 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All services are healthy",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "ok",
+                  "services": {
+                    "database": "ok",
+                    "cache": "ok"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "One or more services are unavailable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "services": {
+                    "database": "ok",
+                    "cache": "error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Check the health of all services",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed for the provided user ID",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "error": "BAD_REQUEST",
+                  "message": "Validation failed (numeric string is expected)",
+                  "path": "/api/v1/users/s"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "error": "NOT_FOUND",
+                  "message": "User not found",
+                  "path": "/api/v1/users/123"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user by ID",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/auth/session": {
+      "post": {
+        "operationId": "AuthController_registerUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed for the provided data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "error": "BAD_REQUEST",
+                  "message": [
+                    "email must be an email",
+                    "password must be a valid password",
+                    "username should not be empty"
+                  ],
+                  "path": "/api/v1/auth/session"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User already exists",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 409,
+                  "error": "CONFLICT",
+                  "message": "User already exists",
+                  "path": "/api/v1/auth/session"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Register a new user and create a session",
+        "tags": [
+          "Auth"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API Documentation",
+    "description": "The API description",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "UserEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Unique identifier for the user",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of the user",
+            "example": "john_doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the user",
+            "example": "john.doe@example.com"
+          },
+          "passwordHash": {
+            "type": "string",
+            "description": "Hashed password of the user (excluded from responses)",
+            "example": "$2b$10$abcdefghijklmnopqrstuv",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "passwordHash"
+        ]
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email address of the user",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password for the user account",
+            "example": "StrongP@ssw0rd!"
+          },
+          "username": {
+            "type": "string",
+            "description": "The username for the user account",
+            "example": "john_doe"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "username"
+        ]
+      },
+      "JwtDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "The access token for authentication",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "The refresh token for obtaining new access tokens",
+            "example": "dGhpc19pc19hX3JlZnJlc2hfdG9rZW4uLi4="
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ]
+      }
+    }
+  }
+}
