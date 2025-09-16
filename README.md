@@ -2,7 +2,9 @@
 
 <div align="center">
 
-[![Backend CI/CD](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml/badge.svg)](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml) [![codecov](https://codecov.io/gh/antoniuk-oleksandr/recipe-manager/graph/badge.svg?token=RARSAUWQPE)](https://codecov.io/gh/antoniuk-oleksandr/recipe-manager)
+[![Backend CI/CD](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml/badge.svg)](https://github.com/antoniuk-oleksandr/recipe-manager/actions/workflows/backend.yaml) 
+[![codecov](https://codecov.io/gh/antoniuk-oleksandr/recipe-manager/graph/badge.svg?token=RARSAUWQPE)](https://codecov.io/gh/antoniuk-oleksandr/recipe-manager)
+[![API Docs](https://img.shields.io/badge/docs-Swagger-blue)](https://antoniuk-oleksandr.github.io/recipe-manager/)
 
 </div>
 
@@ -66,6 +68,11 @@ recipe-manager/
 ├── frontend/           # React frontend for client interaction
 ├── infra/              # Project infrastructure (e.g., Docker Compose)
 ```
+
+## API Documentation
+
+Interactive API docs are available here:  
+🌐 [Recipe Manager API Docs](https://antoniuk-oleksandr.github.io/recipe-manager/)
 
 ## Getting Started
 
