@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { UsersRepository } from '../interface/users.repository.interface';
@@ -5,6 +6,7 @@ import { UsersService } from '../interface/users.service.interface';
 import { UsersServiceImpl } from './users.service';
 import { CreateUserDto } from '../domain/dto/create-user.dto';
 import { UserAlreadyExistsException } from '../exception/user-already-exists.exception';
+import { UserNotFoundException } from '../exception/user-not-found.exception';
 
 describe('UsersService', () => {
   let usersRepository: jest.Mocked<UsersRepository>;
@@ -41,12 +43,18 @@ describe('UsersService', () => {
     });
 
     it('should throw UserAlreadyExistsException on duplicate email', async () => {
-      const duplicateError = new UserAlreadyExistsException();
-      (duplicateError as any).code = '23505';
-      usersRepository.create.mockRejectedValueOnce(duplicateError);
+      const pgError = new Error(
+        'duplicate key value violates unique constraint',
+      ) as any;
+      pgError.code = '23505';
+
+      const wrappedError = new Error('Repository error') as any;
+      wrappedError.cause = pgError;
+
+      usersRepository.create.mockRejectedValueOnce(wrappedError);
 
       await expect(usersService.createUser(createUserDto)).rejects.toThrow(
-        new UserAlreadyExistsException().message,
+        UserAlreadyExistsException,
       );
 
       expect(usersRepository.create).toHaveBeenCalledTimes(1);
@@ -73,19 +81,14 @@ describe('UsersService', () => {
       expect(result).toEqual(mockUser);
     });
 
-    it('should throw UserAlreadyExistsException on duplicate username/email', async () => {
-      const drizzleError = {
-        cause: { code: '23505' },
-      };
+    it('should throw UserNotFoundException if user is not found', async () => {
+      usersRepository.findById.mockResolvedValueOnce(null);
 
-      usersRepository.create.mockRejectedValueOnce(drizzleError);
-
-      await expect(usersService.createUser(createUserDto)).rejects.toThrow(
-        UserAlreadyExistsException,
+      await expect(usersService.getUserById(123)).rejects.toThrow(
+        UserNotFoundException,
       );
-
-      expect(usersRepository.create).toHaveBeenCalledTimes(1);
-      expect(usersRepository.create).toHaveBeenCalledWith(createUserDto);
+      expect(usersRepository.findById).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findById).toHaveBeenCalledWith(123);
     });
   });
 });

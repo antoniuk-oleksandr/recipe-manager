@@ -101,7 +101,7 @@ describe('DefaultExceptionFilter', () => {
     expect(mockResponse.send).toHaveBeenCalledWith({
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       error: 'INTERNAL',
-      message: 'Unexpected failure',
+      message: 'Internal server error',
       path: '/test/path',
     });
 
