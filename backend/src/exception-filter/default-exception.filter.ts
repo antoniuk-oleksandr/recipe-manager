@@ -36,7 +36,7 @@ export class DefaultExceptionFilter implements ExceptionFilter {
         HttpStatus[status]?.toUpperCase().replace(/ /g, '_') || 'UNKNOWN';
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      message = exception?.message || 'Internal server error';
+      message = 'Internal server error';
       errorType = 'INTERNAL';
       console.error(exception);
     }
