@@ -26,7 +26,7 @@ describe('AuthController', () => {
     authService = module.get(AUTH_SERVICE);
   });
 
-  describe('POST /auth/session', () => {
+  describe('POST /auth/users', () => {
     it('should throw 409 if user already exists', async () => {
       authService.registerUser.mockRejectedValueOnce(
         new UserAlreadyExistsException(),

@@ -21,7 +21,7 @@ describe('AuthController', () => {
     await app.close();
   });
 
-  describe('POST /auth/session', () => {
+  describe('POST /auth/users', () => {
     it('should return 201 status and a JWT DTO', async () => {
       const reqBody = {
         email: 'test@gmail.com',
@@ -30,7 +30,7 @@ describe('AuthController', () => {
       };
 
       return request(app.getHttpServer())
-        .post('/api/v1/auth/session')
+        .post('/api/v1/auth/users')
         .send(reqBody)
         .expect(201)
         .expect((resp) => {
