@@ -98,7 +98,7 @@
         ]
       }
     },
-    "/auth/session": {
+    "/auth/users": {
       "post": {
         "operationId": "AuthController_registerUser",
         "parameters": [],
@@ -135,7 +135,7 @@
                     "password must be a valid password",
                     "username should not be empty"
                   ],
-                  "path": "/api/v1/auth/session"
+                  "path": "/api/v1/auth/users"
                 }
               }
             }
@@ -148,7 +148,7 @@
                   "statusCode": 409,
                   "error": "CONFLICT",
                   "message": "User already exists",
-                  "path": "/api/v1/auth/session"
+                  "path": "/api/v1/auth/users"
                 }
               }
             }

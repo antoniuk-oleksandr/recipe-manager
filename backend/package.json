@@ -20,7 +20,7 @@
     "test": "dotenv -e .env.test -- npx jest --config src/config/jest/jest.config.ts --coverage",
     "test:int": "dotenv -e .env.test -- npx jest --config src/config/jest/jest.int.config.ts --coverage",
     "cov:html": "firefox ./coverage/lcov-report/index.html",
-    "gen:swagger": "npx ts-node -r tsconfig-paths/register ./scripts/swagger.ts"
+    "docs": "npx ts-node -r tsconfig-paths/register ./scripts/swagger.ts"
   },
   "dependencies": {
     "@fastify/static": "^8.2.0",

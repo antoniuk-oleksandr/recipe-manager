@@ -20,7 +20,7 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post('session')
+  @Post('users')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Register a new user and create a session' })
   @ApiResponse({
@@ -45,7 +45,7 @@ export class AuthController {
           statusCode: 409,
           error: 'CONFLICT',
           message: 'User already exists',
-          path: '/api/v1/auth/session',
+          path: '/api/v1/auth/users',
         },
       },
     },
@@ -63,7 +63,7 @@ export class AuthController {
             'password must be a valid password',
             'username should not be empty',
           ],
-          path: '/api/v1/auth/session',
+          path: '/api/v1/auth/users',
         },
       },
     },
