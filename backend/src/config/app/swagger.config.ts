@@ -10,7 +10,7 @@ export class SwaggerConfig implements AppConfigStep {
       .setVersion('1.0')
       .build();
 
-    const documenFactory = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/v1/docs', app, documenFactory);
+    const documentFactory = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/v1/docs', app, documentFactory);
   }
 }

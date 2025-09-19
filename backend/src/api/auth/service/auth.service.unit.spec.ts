@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Test } from '@nestjs/testing';
 import {
   AUTH_SERVICE,
@@ -10,10 +11,13 @@ import { PasswordService } from '../interface/password.service.interface';
 import { JwtHelperService } from '../interface/jwt-helper.service.interface';
 import { AuthService } from '../interface/auth.service.interface';
 import { UsersService } from 'src/api/users/interface/users.service.interface';
+import { LoginDto } from '../domain/dto/login.dto';
+import { InvalidCredentialsException } from '../exception/invalid-credentials.exception';
 
 const mockUsersService: jest.Mocked<UsersService> = {
   getUserById: jest.fn(),
   createUser: jest.fn(),
+  getUserByUsernameOrEmail: jest.fn(),
 };
 
 const mockPasswordService: jest.Mocked<PasswordService> = {
@@ -80,18 +84,90 @@ describe('AuthService', () => {
         refreshToken: 'refreshToken',
       });
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockPasswordService.hash).toHaveBeenCalledWith('password');
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockUsersService.createUser).toHaveBeenCalledWith({
         email: registerDto.email,
         username: registerDto.username,
         passwordHash: 'hashedPassword',
       });
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockJwtHelperService.signAccessToken).toHaveBeenCalled();
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockJwtHelperService.signRefreshToken).toHaveBeenCalled();
+    });
+  });
+
+  describe('loginUser', () => {
+    it('should validate user credentials and return access & refresh tokens', async () => {
+      mockUsersService.getUserByUsernameOrEmail.mockResolvedValueOnce(
+        userFixture,
+      );
+
+      mockPasswordService.compare.mockResolvedValueOnce(true);
+      mockJwtHelperService.signAccessToken.mockResolvedValueOnce('accessToken');
+      mockJwtHelperService.signRefreshToken.mockResolvedValueOnce(
+        'refreshToken',
+      );
+
+      const loginDto: LoginDto = {
+        usernameOrEmail: 'testuser',
+        password: 'password',
+      };
+
+      const jwtDto = await authService.loginUser(loginDto);
+      expect(jwtDto).toEqual({
+        accessToken: 'accessToken',
+        refreshToken: 'refreshToken',
+      });
+      expect(mockUsersService.getUserByUsernameOrEmail).toHaveBeenCalledWith(
+        'testuser',
+      );
+      expect(mockPasswordService.compare).toHaveBeenCalledWith(
+        'password',
+        'hashedPassword',
+      );
+      expect(mockJwtHelperService.signAccessToken).toHaveBeenCalledWith(1);
+      expect(mockJwtHelperService.signRefreshToken).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw InvalidCredentialsException if user credentials are invalid', async () => {
+      mockUsersService.getUserByUsernameOrEmail.mockResolvedValueOnce(
+        userFixture,
+      );
+
+      mockPasswordService.compare.mockResolvedValueOnce(false);
+
+      const loginDto: LoginDto = {
+        usernameOrEmail: 'testuser',
+        password: 'wrongpassword',
+      };
+
+      await expect(authService.loginUser(loginDto)).rejects.toThrow(
+        InvalidCredentialsException,
+      );
+
+      expect(mockUsersService.getUserByUsernameOrEmail).toHaveBeenCalledWith(
+        'testuser',
+      );
+      expect(mockPasswordService.compare).toHaveBeenCalledWith(
+        'wrongpassword',
+        'hashedPassword',
+      );
+    });
+
+    it('should throw InvalidCredentialsException if user not found', async () => {
+      mockUsersService.getUserByUsernameOrEmail.mockResolvedValueOnce(null);
+
+      const loginDto: LoginDto = {
+        usernameOrEmail: 'nonexistentuser',
+        password: 'password',
+      };
+
+      await expect(authService.loginUser(loginDto)).rejects.toThrow(
+        InvalidCredentialsException,
+      );
+      expect(mockUsersService.getUserByUsernameOrEmail).toHaveBeenCalledWith(
+        'nonexistentuser',
+      );
+      expect(mockPasswordService.compare).not.toHaveBeenCalled();
     });
   });
 });

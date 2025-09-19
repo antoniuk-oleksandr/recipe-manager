@@ -40,4 +40,47 @@ describe('UsersRepository', () => {
       expect(foundUser).toMatchObject(userDto);
     });
   });
+
+  describe('findByUsernameOrEmail', () => {
+    it('should return a found user when searching by its username', async () => {
+      const userDto: CreateUserDto = {
+        email: 'test@gmail.com',
+        username: 'test',
+        passwordHash: 'test',
+      };
+
+      const user = await repo.create(userDto);
+
+      expect(user).toBeDefined();
+      expect(user.id).toBeDefined();
+      expect(user).toMatchObject(userDto);
+
+      const foundUser = await repo.findByUsernameOrEmail(userDto.username);
+      expect(foundUser).toBeDefined();
+      expect(foundUser).toMatchObject(userDto);
+    });
+
+    it('should return a found user when searching by its email', async () => {
+      const userDto: CreateUserDto = {
+        email: 'test@gmail.com',
+        username: 'test',
+        passwordHash: 'test',
+      };
+
+      const user = await repo.create(userDto);
+
+      expect(user).toBeDefined();
+      expect(user.id).toBeDefined();
+      expect(user).toMatchObject(userDto);
+
+      const foundUser = await repo.findByUsernameOrEmail(userDto.email);
+      expect(foundUser).toBeDefined();
+      expect(foundUser).toMatchObject(userDto);
+    });
+  });
+
+  it('should return null if user not found', async () => {
+    const foundUser = await repo.findByUsernameOrEmail('test');
+    expect(foundUser).toBeNull();
+  });
 });
