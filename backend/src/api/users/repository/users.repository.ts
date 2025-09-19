@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/service/db.service';
 import { UsersRepository } from '../interface/users.repository.interface';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 import { usersTable } from 'src/db/tables/users';
 import { CreateUserDto } from '../domain/dto/create-user.dto';
 import { UserEntity } from '../domain/entity/user.entity';
@@ -10,6 +10,22 @@ import { getTableColumns } from 'drizzle-orm';
 @Injectable()
 export class UsersRepositoryImpl implements UsersRepository {
   constructor(private readonly dbService: DbService) {}
+
+  async findByUsernameOrEmail(
+    usernameOrEmail: string,
+  ): Promise<UserEntity | null> {
+    const [user] = await this.dbService.db
+      .select(getTableColumns(usersTable))
+      .from(usersTable)
+      .where(
+        or(
+          eq(usersTable.username, usernameOrEmail),
+          eq(usersTable.email, usernameOrEmail),
+        ),
+      );
+
+    return user ? new UserEntity(user) : null;
+  }
 
   async create(user: CreateUserDto): Promise<UserEntity> {
     const [createdUser] = await this.dbService.db

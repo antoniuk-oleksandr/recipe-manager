@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AUTH_SERVICE } from '../constants/auth.constants';
@@ -17,6 +20,7 @@ describe('AuthController', () => {
           provide: AUTH_SERVICE,
           useValue: {
             registerUser: jest.fn(),
+            loginUser: jest.fn(),
           },
         },
       ],
@@ -41,6 +45,20 @@ describe('AuthController', () => {
       await expect(authController.registerUser(reqBody)).rejects.toMatchObject({
         status: 409,
       });
+    });
+  });
+
+  describe('POST /auth/sessions', () => {
+    it('should call AuthService.loginUser and return JWT DTO', async () => {
+      const mockJwtDto = { accessToken: 'token', refreshToken: 'refresh' };
+      //@ts-ignore
+      authService.loginUser.mockResolvedValueOnce(mockJwtDto);
+
+      const reqBody = { usernameOrEmail: 'test', password: 'Test123#' };
+      const result = await authController.loginUser(reqBody);
+
+      expect(authService.loginUser).toHaveBeenCalledWith(reqBody);
+      expect(result).toEqual(mockJwtDto);
     });
   });
 });

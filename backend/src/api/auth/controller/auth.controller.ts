@@ -6,11 +6,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { AuthService } from '../interface/auth.service.interface';
 import { AUTH_SERVICE } from '../constants/auth.constants';
 import { RegisterDto } from '../domain/dto/register.dto';
 import { JwtDto } from '../domain/dto/jwt.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { LoginDto } from '../domain/dto/login.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,6 +20,40 @@ export class AuthController {
     @Inject(AUTH_SERVICE)
     private readonly authService: AuthService,
   ) {}
+
+  @Post('sessions')
+  @ApiOperation({ summary: 'Authenticate user and create a session' })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully authenticated',
+    type: JwtDto,
+    content: {
+      'application/json': {
+        example: {
+          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+          refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid credentials',
+    content: {
+      'application/json': {
+        example: {
+          statusCode: 401,
+          error: 'UNAUTHORIZED',
+          message: 'Invalid credentials',
+          path: '/api/v1/auth/sessions',
+        },
+      },
+    },
+  })
+  async loginUser(@Body() loginDto: LoginDto): Promise<JwtDto> {
+    return await this.authService.loginUser(loginDto);
+  }
 
   @Post('users')
   @HttpCode(HttpStatus.CREATED)

@@ -98,6 +98,51 @@
         ]
       }
     },
+    "/auth/sessions": {
+      "post": {
+        "operationId": "AuthController_loginUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 401,
+                  "error": "UNAUTHORIZED",
+                  "message": "Invalid credentials",
+                  "path": "/api/v1/auth/sessions"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authenticate user and create a session",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/auth/users": {
       "post": {
         "operationId": "AuthController_registerUser",
@@ -203,6 +248,44 @@
           "passwordHash"
         ]
       },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "usernameOrEmail": {
+            "type": "string",
+            "description": "Username or email of the user",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user",
+            "example": "StrongP@ssw0rd!"
+          }
+        },
+        "required": [
+          "usernameOrEmail",
+          "password"
+        ]
+      },
+      "JwtDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "The access token for authentication",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "The refresh token for obtaining new access tokens",
+            "example": "dGhpc19pc19hX3JlZnJlc2hfdG9rZW4uLi4="
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ]
+      },
       "RegisterDto": {
         "type": "object",
         "properties": {
@@ -226,25 +309,6 @@
           "email",
           "password",
           "username"
-        ]
-      },
-      "JwtDto": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "The access token for authentication",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          },
-          "refreshToken": {
-            "type": "string",
-            "description": "The refresh token for obtaining new access tokens",
-            "example": "dGhpc19pc19hX3JlZnJlc2hfdG9rZW4uLi4="
-          }
-        },
-        "required": [
-          "accessToken",
-          "refreshToken"
         ]
       }
     }

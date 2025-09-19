@@ -11,6 +11,8 @@ import {
 import type { PasswordService } from '../interface/password.service.interface';
 import { CreateUserDto } from 'src/api/users/domain/dto/create-user.dto';
 import type { JwtHelperService } from '../interface/jwt-helper.service.interface';
+import { LoginDto } from '../domain/dto/login.dto';
+import { InvalidCredentialsException } from '../exception/invalid-credentials.exception';
 
 @Injectable()
 export class AuthServiceImpl implements AuthService {
@@ -24,6 +26,30 @@ export class AuthServiceImpl implements AuthService {
     @Inject(JWT_HELPER_SERVICE)
     private readonly jwtHelperService: JwtHelperService,
   ) {}
+
+  async loginUser(loginDto: LoginDto): Promise<JwtDto> {
+    const user = await this.usersService.getUserByUsernameOrEmail(
+      loginDto.usernameOrEmail,
+    );
+
+    if (!user) {
+      throw new InvalidCredentialsException();
+    }
+
+    const isPasswordValid = await this.passwordService.compare(
+      loginDto.password,
+      user.passwordHash,
+    );
+
+    if (!isPasswordValid) {
+      throw new InvalidCredentialsException();
+    }
+
+    return {
+      accessToken: await this.jwtHelperService.signAccessToken(user.id),
+      refreshToken: await this.jwtHelperService.signRefreshToken(user.id),
+    };
+  }
 
   async registerUser(registerDto: RegisterDto): Promise<JwtDto> {
     const { password, ...plainRegisterDto } = registerDto;

@@ -27,6 +27,7 @@ describe('UsersService', () => {
     usersRepository = {
       create: jest.fn(),
       findById: jest.fn(),
+      findByUsernameOrEmail: jest.fn(),
     };
     usersService = new UsersServiceImpl(usersRepository);
   });
@@ -89,6 +90,20 @@ describe('UsersService', () => {
       );
       expect(usersRepository.findById).toHaveBeenCalledTimes(1);
       expect(usersRepository.findById).toHaveBeenCalledWith(123);
+    });
+  });
+
+  describe('getUserByUsernameOrEmail', () => {
+    it('should return a user if found', async () => {
+      usersRepository.findByUsernameOrEmail.mockResolvedValueOnce(mockUser);
+
+      const result = await usersService.getUserByUsernameOrEmail('testuser');
+
+      expect(usersRepository.findByUsernameOrEmail).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findByUsernameOrEmail).toHaveBeenCalledWith(
+        'testuser',
+      );
+      expect(result).toEqual(mockUser);
     });
   });
 });

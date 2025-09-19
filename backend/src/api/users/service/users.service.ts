@@ -16,6 +16,12 @@ export class UsersServiceImpl implements UsersService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
+  getUserByUsernameOrEmail(
+    usernameOrEmail: string,
+  ): Promise<UserEntity | null> {
+    return this.usersRepository.findByUsernameOrEmail(usernameOrEmail);
+  }
+
   async createUser(user: CreateUserDto): Promise<UserEntity> {
     try {
       return await this.usersRepository.create(user);
